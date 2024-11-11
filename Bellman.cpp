@@ -1,52 +1,69 @@
-#include <bits/stdc++.h>
-
+#include<iostream>
 using namespace std;
 
-struct Edge {
- int src, dest, wgt;
-};
+int main(){
+	int v,e,source;
+	cout<<"enter the no. of vertices::";
+	cin>>v;
+	cout<<"enter the no. of edges::";
+	cin>>e;
+	cout<<"enter the source vertex::";
+	cin>>source;
+	
+	int mat[3][e];
+	for(int i=0;i<e;i++){
+		cout<<"enter the start vertex::";
+		cin>>mat[0][i];
+		cout<<"enter the ending vertex::";
+		cin>>mat[1][i];;
+		cout<<"enter the value of edge::";
+		cin>>mat[2][i];;
+	}
+	
+	cout<<"start point::";	
+	for(int j=0;j<e;j++){
+	 cout<<mat[0][j]<<"\t";
+	}
+	cout<<"\nend point ::";
+	for(int j=0;j<e;j++){
+	 cout<<mat[1][j]<<"\t";
+	}
+	cout<<"\nvalues   ::";
+	for(int j=0;j<e;j++){
+	 cout<<mat[2][j]<<"\t";
+	}
+	cout<<endl;
+	
+	int dist[v];
+	for(int i=0;i<v;i++){
+		dist[i]=999;
+	}
+	dist[source]=0;
+	
+	int start,end;
+	for(int j=0;j<v;j++){
+	int flag=0;
+		for(int i=0;i<e;i++){
+			start=mat[0][i];
+			end=mat[1][i];
+			if(dist[start]!=999){
+				if(dist[end]>(dist[start]+mat[2][i])){
+					dist[end]=dist[start]+mat[2][i];
+					flag=1;
+				}
+			}
+		}
+		if(flag==0 && j!=(v-1)){
+			break;
+		}
+		else if(flag==1 && j==(v-1)){
+			cout<<"there exists a negative loop\n";	
+		}
 
-struct Graph {
- int V, E;
- vector<Edge> edges;
- Graph(int V, int E) : V(V), E(E), edges(E) {}
-};
-
-void printArr(const vector<int>& dist) {
- cout << "\nVertex Distance from source:\n";
- for (int i = 0; i < dist.size(); i++)
- cout << i << "\t\t" << dist[i] << "\n";
-}
-
-void bellmanFord(const Graph& graph, int src) {
- int V = graph.V, E = graph.E;
- vector<int> dist(V, INT_MAX);
- dist[src] = 0;
- for (int i = 1; i < V; i++) {
- for (const auto& edge : graph.edges) {
- if (dist[edge.src] != INT_MAX && dist[edge.src] + edge.wgt < dist[edge.dest])
- dist[edge.dest] = dist[edge.src] + edge.wgt;
- }
- }
-
- for (const auto& edge : graph.edges) {
- if (dist[edge.src] != INT_MAX && dist[edge.src] + edge.wgt < dist[edge.dest]) {
- cout << "Graph contains negative weight cycle";
- return;
- }
- }
- printArr(dist);
-}
-
-int main() {
- int V, E;
- cout << "Enter number of vertices and edges: ";
- cin >> V >> E;
- Graph graph(V, E);
- for (int i = 0; i < E; i++) {
- cout << "Enter edge (src dest wgt): ";
- cin >> graph.edges[i].src >> graph.edges[i].dest >> graph.edges[i].wgt;
- }
- bellmanFord(graph, 0);
- return 0;
+        cout<<"\nIteration "<<j+1<<": ";
+		for(int i=0;i<v;i++){
+			cout<<dist[i]<<"\t";
+		}cout<<endl;	
+	}
+	return 0;
 }
